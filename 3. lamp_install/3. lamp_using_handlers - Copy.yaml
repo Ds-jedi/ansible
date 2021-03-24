@@ -1,0 +1,73 @@
+######################################################################
+---
+- hosts: all
+  become: yes
+  tasks:
+   - name: uninstall git
+     package:
+       name: git
+       state: absent
+   - name: log message for uninstallation
+     debug:
+        msg: "git is uninstalled"
+######################################################################    
+    ## This playbook displays git is uninstalled message every time, but
+    ## actually it has to display the message when git is uninstalled by
+    ## ansible, so using handlers will solve the issue
+######################################################################
+---
+- hosts: all
+  become: yes
+  handlers: 
+    - name: uninstall message
+      debug:
+        msg: "git is uninstalled"
+  tasks:
+    - name: UnInstall git
+      package:
+        name: git
+        state: absent
+      notify: uninstall message
+
+######################################################################
+######################################################################
+
+---
+- hosts: all
+  become: yes
+  vars:
+    var1: apache2
+    var2:
+      - php
+      - libapache2-mod-php
+      - php-mysql
+      - php-cli   
+  tasks:
+    - name: fail in other os
+      fail:
+        msg: "failed"
+      when: ansible_distribution != "Ubuntu"
+    - name: install http
+      package:
+        name: "{{var1}}"
+        update_cache: yes
+        state: present
+    - name: install php
+      package:
+        name: "{{item}}"
+        state: present
+      loop: "{{var2}}"
+      notify: debug message for php modules
+      notify: restart and enable apache2
+  handlers:
+    - name: restart and enable apache2
+      service:
+        name: "{{ var1 }}"
+        enabled: yes
+        state: restarted
+    - name: debug message for apache installation
+      debug:
+        msg: "{{ var1 }} is installed"
+    - name: debug message for php modules
+      debug:
+        msg: "php modules are installed"

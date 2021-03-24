@@ -1,0 +1,41 @@
+include_tasks: Includes a file with a list of tasks to be executed in 
+               the current playbook.
+
+import_tasks: Imports a list of tasks to be added to the current playbook 
+              for subsequent execution.
+##############################################################################
+All import* statements are pre-processed at the time playbooks are parsed.
+All include* statements are processed as they encountered during the execution 
+of the playbook.
+##############################################################################
+So import is static, include is dynamic.
+##############################################################################
+there are several playbooks and I want to add same pre_tasks and 
+post_tasks to those playbooks. so I add the import_tasks to playbooks.
+##############################################################################
+I need to run this play in the middle of the playbook because it 
+is dependent on a prior task and a subsequent task depends on it 
+(otherwise I'd break it up differently) 
+##############################################################################
+Let’s say that there are some common roles that you would like to include across 
+all your different server types. You could create a common_roles.yml
+And then include it in your other playbooks to reduce repetition and keep your 
+playbooks DRY:
+
+---
+- hosts: web                                      # ./web.yml
+- import_playbook: common_roles.yml
+  name: configure web servers
+  roles:
+    - nginx
+    - my_site
+
+---                                        # ./database.yml
+- hosts: database
+- import_playbook: common_roles.yml  
+  name: configure database servers
+  roles:
+    - postgres                                   
+    
+
+    

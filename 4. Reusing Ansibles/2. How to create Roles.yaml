@@ -1,0 +1,26 @@
+ROLES FOLDER STRUCTURE
+########################
+
+site.yml
+webservers.yml
+fooservers.yml
+roles/
+    common/
+        tasks/
+        handlers/
+        files/
+        templates/
+        vars/
+        defaults/
+        meta/
+    webservers/
+        tasks/
+        defaults/
+        meta/
+
+# intialising a custom role 
+
+ansible-galaxy role init nodejs
+
+# THis creates a folder structure
+# Copy handlers, tasks, vars each into separate folder with their own yaml file

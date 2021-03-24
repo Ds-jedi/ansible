@@ -1,0 +1,39 @@
+---
+- hosts: all
+  become : yes
+  tasks:
+  - name: create an empty file 
+    file:
+      path: /home/devops/readme.txt
+      state: touch
+
+  - name: Change file ownership, group and permissions
+    file:
+        path: /etc/foo.conf
+        owner: foo
+        group: foo
+        mode: '0644'
+    
+  - name: copy the files on your server 
+    file:
+        src: /home/devops/readme.txt
+        dest: /home/devops/readmecopy.txt
+        state: link
+    
+  - name: create directory 
+    file:
+        path: /home/devops/temp
+        state: directory
+  
+  - name: download file from url 
+    get_url:
+        url: https://war-jar-files.s3-us-west-2.amazonaws.com/gameoflife.war
+        dest: /home/devops/gameoflife.war
+    
+  - name: copy the file from acs to node 
+    copy:
+        src: demo.txt
+        dest: /home/devops/demo.txt
+
+
+ 

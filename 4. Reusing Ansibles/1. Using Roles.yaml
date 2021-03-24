@@ -1,0 +1,21 @@
+# Ansible Galaxy
+# Repository of Reusable Ansible Artifacts
+# Reusability is provided by Ansible Roles.
+# Now navigate to ansible galaxy and search for node js and select any role
+https://galaxy.ansible.com/geerlingguy/nodejs
+https://github.com/geerlingguy/ansible-role-nodejs
+
+# ansible-galaxy install geerlingguy.nodejs
+
+---
+- hosts: all
+  become: yes
+  roles:
+    - geerlingguy.nodejs
+
+# ansible-playbook node.yaml --syntax-check
+# ansible-playbook node.yaml
+
+
+
+

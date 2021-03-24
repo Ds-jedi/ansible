@@ -1,0 +1,40 @@
+---
+- hosts: webservers
+  become : yes
+  vars: 
+    package apache: apache2
+    package_php: 
+        - php
+        - libapache2-mod-php
+        - php-mysql
+        - php-cli       
+  tasks :
+
+    - name:  fail playbook when distro isnt ubuntu
+      fail:
+        msg: "fail mes"
+      when : ansible_distribution != "ubuntu"
+
+    - name: install apache
+      apt:
+        name: "{{ package apache}}"
+        update cache : yes
+        state : present
+
+    - name: enable and restart apache
+      service:
+        name: "{{ package apache}}"
+        enabled: yes
+        state : restarted
+
+    - name: install php modules
+      apt:
+        name: "{{ item}}"
+        update cache : yes
+        state : present
+      loop: "{{ package_ php }}"
+    
+    - name:  restart apache
+      service:
+        name: "{{ package apache}}"
+        state : restarted

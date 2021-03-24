@@ -1,0 +1,35 @@
+mail.example.com
+
+[webservers]
+foo.example.com
+bar.example.com
+
+[dbservers]
+one.example.com
+two.example.com
+three.example.com
+
+===================================================
+
+# Inventory
+
+[acs]
+localhost package_name=apache2
+
+[webserver]
+172.31.25.93 package_name=apache2
+172.31.25.22 package_name=httpd
+
+=====================================================
+
+[acs]
+localhost 
+
+[webserver]
+172.31.25.93 
+172.31.25.22 
+
+[webserver:vars]
+package_name:test1 
+
+=====================================================

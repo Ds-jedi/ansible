@@ -1,0 +1,4 @@
+Dynamic inventory is a script written in any language which returns a 
+json file in a particular structure when –hosts is called or when –list.
+
+ansible-playbook -i path/to/dynamic-inventory-script.py -l myhost myplaybook.yml

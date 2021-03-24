@@ -1,0 +1,24 @@
+---
+- hosts: all
+  become: yes
+  tasks: 
+    - name: debug info display variable
+      debug:
+        msg: "variable_used = {{package_name}}"
+    - name: install apache
+      package:
+        name: "{{package_name}}"
+        update_cache: yes
+        state: present  
+    - name: enable apache 
+      service:
+        name: "{{package_name}}"
+        state: started
+        enabled: yes
+    - name: debug info apache
+      debug:
+        msg: "apache is installed and started"
+
+
+
+  

@@ -1,0 +1,59 @@
+FORKS
+
+Maximum number of simultaneous connections Ansible made on each Task.
+
+Use: When you need to manage how many nodes should get affected simultaneously.
+
+Story 1: Suppose you have 4 nodes (nodeA, nodeB, nodeC, nodeD) in inventory, 
+2 tasks in playbook, forks =5 (by default)
+
+    First task process on all 4 nodes (nodeA, nodeB, nodeC, nodeD)simultaneously, 
+    then Second task process on all 4 nodes (nodeA, nodeB, nodeC, nodeD) 
+    simultaneously. If we assume processing time for each task is 5 seconds;
+
+    Time take for 1st task = 5s (nodeA, nodeB, nodeC, nodeD)
+
+    Time take for 2nd task = 5s (nodeA, nodeB, nodeC, nodeD)
+
+    Total time taken for playbook = 10s
+
+That’s the way Ansible work by default (By default Ansible process maximum 5 
+nodes simultaneously). It was written inside /etc/ansible/ansible.cfg as 
+forks =5. You are free to change forks value but remember increasing it may 
+put heavy load on Ansible Control Node (so make sure not to overload Control 
+Nodes resources).
+
+Story 2: Suppose you have 6 nodes (nodeA, nodeB, nodeC, nodeD, nodeE, 
+nodeF) in inventory & 2 tasks in playbook (assuming default forks = 5)
+
+    First task process on 5 nodes (nodeA, nodeB, nodeC, nodeD, nodeE) 
+    simultaneously, after that 5 nodes completed task process of rest 
+    of node (nodeF). Then Second task process on 5 nodes (nodeA, nodeB, 
+    nodeC, nodeD, nodeE) simultaneously, after that 5 nodes completed 
+    task process of rest of node (nodeF). If we assume processing time 
+    for each task is 5 seconds;
+
+    Time taken for 1st task = 5s (nodeA, nodeB, nodeC, nodeD, nodeE) + 5s (nodeF)
+
+    Time taken for 2nd task = 5s (nodeA, nodeB, nodeC, nodeD, nodeE) + 5s (nodeF)
+
+    Total time taken for playbook = 20s
+
+Hope you got a CLEAR idea on how FORKS works
+###############################################################
+SERIAL
+##############################################################
+Decides the number of nodes process in each tasks in a single run.
+
+Use: When you need to provide changes as batches/ rolling changes.
+
+Story 3: Suppose you have 4 nodes (nodeA, nodeB, nodeC, nodeD) in inventory, 
+2 tasks in playbook, forks =5 and serial = 2.
+
+    First task process on 2 nodes (nodeA, nodeB) simultaneously (should process 
+    on 4 nodes, but due to serial configuration it process on 2 nodes only) and 
+    then jump into Second task. Second task process on 2 nodes (nodeA, nodeB) 
+    simultaneously. Once both tasks completed, it again run playbook for rest 
+    of 2 nodes.
+
+    

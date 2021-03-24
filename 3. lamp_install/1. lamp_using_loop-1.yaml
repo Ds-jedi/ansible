@@ -1,0 +1,64 @@
+---
+- hosts: webservers
+  become: yes
+  tasks :
+    - name : fail playbook when os is not ubuntu 
+      fail :
+      msg:  "failed coz its not ubuntu "
+      when: ansible_distribution != 'Ubuntu'
+    - name : install and update apache 
+      apt : 
+         name: "{{ package_apache }}"
+         update cache : yes
+         state: present
+    - name : restart and enable apache2    
+      service : 
+         name: "{{ package_apache }}"
+         enabled: yes
+         state: restarted
+    - name : install php modules
+      apt : 
+         name: "{{ item }}"
+         update cache : yes
+         state: present
+      loop :
+        - php
+        - libapache2-mod-php
+        - php-mysql
+        - php-cli
+    - name : restart apache   
+      service : 
+         name: "{{ package_apache }}"
+         state: restarted
+
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: fail on centos
+      fail:
+        msg: "failed"
+      when: ansible_distribution =! "Ubuntu"
+    - name: install apache
+      package:
+        name: "{{var_1}}"
+        update_cache: yes
+        state: present
+    - name: enable and restart apache
+      service:
+        name: "{{var_1}}"
+        enabled: yes
+        state: restarted
+    - name: install php modules
+      package:
+        name: "{{item}}"
+        state: present
+      loop:
+        - php
+        - libapache2-mod-php
+        - php-mysql
+        - php-cli
+    - name: restart apache
+      service:
+        name: "{{var_1}}"
+        state: restarted
